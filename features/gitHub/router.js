@@ -9,6 +9,11 @@ const getRepo = require('./services/getRepo')
 const userRepoFromUrl = require('./services/userRepoFromUrl')
 const validateUrl = require('./services/validateUrl')
 
+const tap = (arg) => {
+    console.log(arg)
+    return arg
+}
+
 gitHubRouter.get('/', async (req, res) => {
     const gh = new GitHub({ token: gitHubApiKey })
     const repoUrl = req.query.url
