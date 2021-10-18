@@ -1,7 +1,6 @@
 const express = require('express')
 const gitHubRouter = new express.Router()
 const GitHub = require('github-api')
-const axios = require('axios')
 const gitHubApiKey = process.env.GITHUB_API_KEY
 const commitsFromPRs = require('./services/commitsFromPrs')
 const getOpenPrs = require('./services/getOpenPRs')
@@ -32,6 +31,7 @@ gitHubRouter.get('/', async (req, res) => {
                 url: pull.html_url,
             }))
         )
+//    .then(tap)
         .then((resData) => res.json(resData))
         .catch((e) => {
             console.log(e)
