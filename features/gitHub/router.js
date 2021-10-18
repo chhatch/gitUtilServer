@@ -34,9 +34,8 @@ gitHubRouter.get('/', async (req, res) => {
 //    .then(tap)
         .then((resData) => res.json(resData))
         .catch((e) => {
-            console.log(e)
-            res.status = e.status || 500
-            res.send(e.message)
+            status = e.status || 500
+            res.status(status).send(e.message)
         })
 })
 
