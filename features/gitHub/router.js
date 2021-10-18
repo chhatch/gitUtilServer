@@ -7,6 +7,7 @@ const commitsFromPRs = require('./services/commitsFromPrs')
 const getOpenPrs = require('./services/getOpenPRs')
 const getRepo = require('./services/getRepo')
 const userRepoFromUrl = require('./services/userRepoFromUrl')
+const validateUrl = require('./services/validateUrl')
 
 gitHubRouter.get('/', async (req, res) => {
     const gh = new GitHub({ token: gitHubApiKey })
@@ -14,6 +15,7 @@ gitHubRouter.get('/', async (req, res) => {
 
     //kick things off with a resolved promise
     Promise.resolve(repoUrl)
+        .then(validateUrl)
         .then(userRepoFromUrl)
         .then(getRepo(gh))
         .then(getOpenPrs)
