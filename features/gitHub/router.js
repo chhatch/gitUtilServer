@@ -26,6 +26,11 @@ gitHubRouter.get('/', async (req, res) => {
             }))
         )
         .then((resData) => res.json(resData))
+        .catch((e) => {
+            console.log(e)
+            res.status = 500
+            res.send('Server Error')
+        })
 })
 
 module.exports = gitHubRouter
