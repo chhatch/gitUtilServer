@@ -21,8 +21,7 @@ gitHubRouter.get('/', async (req, res) => {
         } else break
     }
     
-
-    res.json(openPulls.map(pull => ({title: pull.title, url: pull.url})))
+    res.json(openPulls.map(pull => ({title: pull.title, url: pull.html_url})))
 })
 
 module.exports = gitHubRouter
