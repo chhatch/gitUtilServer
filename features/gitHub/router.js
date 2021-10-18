@@ -2,9 +2,10 @@ const express = require('express')
 const gitHubRouter = new express.Router()
 const GitHub = require('github-api')
 const axios = require('axios')
+const gitHubApiKey = process.env.GITHUB_API_KEY
 
 gitHubRouter.get('/', async (req, res) => {
-    const gh = new GitHub()
+    const gh = new GitHub({ token: gitHubApiKey })
     const repoUrl = req.query.url
     const splitUrl = repoUrl.split('/')
     const match = /\/([A-Za-z0-9-]+)\/([A-Za-z0-9_.-]+)/.exec(repoUrl)
@@ -25,16 +26,19 @@ gitHubRouter.get('/', async (req, res) => {
             page++
         } else break
     }
-    console.log(openPulls)
 
     openPulls = Promise.all(
         openPulls.map(async (pull) => {
-            const commits = (await axios.get(pull.commits_url)).data.length
+            const commits = (
+                await axios.get(pull.commits_url, {
+                    headers: { Authorization: `token ${gitHubApiKey}` },
+                })
+            ).data.length
         })
     )
 
     res.json(
-        openPulls.map((pull) => ({ commits,title: pull.title, url: pull.html_url }))
+        openPulls.map((pull) => ({ title: pull.title, url: pull.html_url }))
     )
 })
 
