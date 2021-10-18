@@ -4,6 +4,11 @@ const GitHub = require('github-api')
 const axios = require('axios')
 const gitHubApiKey = process.env.GITHUB_API_KEY
 
+const sleep = (ms) => {
+    console.log('Sleep!', ms)
+    return new Promise((resolve, _) => setTimeout(() => resolve(), ms))
+}
+
 gitHubRouter.get('/', async (req, res) => {
     const gh = new GitHub({ token: gitHubApiKey })
     const repoUrl = req.query.url
@@ -24,21 +29,27 @@ gitHubRouter.get('/', async (req, res) => {
         if (queryRes.data.length) {
             openPulls.push(...queryRes.data)
             page++
+            await sleep(20)
         } else break
     }
 
-    openPulls = Promise.all(
-        openPulls.map(async (pull) => {
-            const commits = (
-                await axios.get(pull.commits_url, {
-                    headers: { Authorization: `token ${gitHubApiKey}` },
-                })
-            ).data.length
-        })
-    )
+    for (let i = 0, len = openPulls.length; i < len; i++) {
+        const pull = openPulls[i]
+        const commits = (
+            await axios.get(pull.commits_url, {
+                headers: { Authorization: `token ${gitHubApiKey}` },
+            })
+        ).data
+        pull.numberOfCommits = commits.length
+        sleep(20)
+    }
 
     res.json(
-        openPulls.map((pull) => ({ title: pull.title, url: pull.html_url }))
+        openPulls.map((pull) => ({
+            numberOfCommits: pull.numberOfCommits,
+            title: pull.title,
+            url: pull.html_url,
+        }))
     )
 })
 
