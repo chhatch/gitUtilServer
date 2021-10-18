@@ -1,6 +1,7 @@
 const express = require('express')
 const gitHubRouter = new express.Router()
 const GitHub = require('github-api')
+const axios = require('axios')
 
 gitHubRouter.get('/', async (req, res) => {
     const gh = new GitHub()
@@ -11,17 +12,30 @@ gitHubRouter.get('/', async (req, res) => {
     const repoName = match[2]
 
     const repo = gh.getRepo(user, repoName)
-    const openPulls = []
+    let openPulls = []
     let page = 1
     while (true) {
-        const queryRes = await repo.listPullRequests({ state: 'open', page, per_page: 100 })
+        const queryRes = await repo.listPullRequests({
+            state: 'open',
+            page,
+            per_page: 100,
+        })
         if (queryRes.data.length) {
             openPulls.push(...queryRes.data)
             page++
         } else break
     }
-    
-    res.json(openPulls.map(pull => ({title: pull.title, url: pull.html_url})))
+    console.log(openPulls)
+
+    openPulls = Promise.all(
+        openPulls.map(async (pull) => {
+            const commits = (await axios.get(pull.commits_url)).data.length
+        })
+    )
+
+    res.json(
+        openPulls.map((pull) => ({ commits,title: pull.title, url: pull.html_url }))
+    )
 })
 
 module.exports = gitHubRouter
