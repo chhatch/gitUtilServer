@@ -7,6 +7,9 @@
         "start": "env-cmd --file ./config/.env nodemon ./index.js",
         "test": "jest --watchAll"
     },
+    "jest": {
+        "setupFiles": ["./jest/setEnvVars.js"]
+    },
     "author": "",
     "license": "ISC",
     "dependencies": {
