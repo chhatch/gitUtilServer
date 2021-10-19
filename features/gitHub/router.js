@@ -2,8 +2,8 @@ const express = require('express')
 const gitHubRouter = new express.Router()
 const GitHub = require('github-api')
 const gitHubApiKey = process.env.GITHUB_API_KEY
-const commitsFromPRs = require('./services/commitsFromPrs')
-const getOpenPrs = require('./services/getOpenPRs')
+const commitsFromPRs = require('./services/commitsFromPRs')
+const getOpenPRs = require('./services/getOpenPRs')
 const getRepo = require('./services/getRepo')
 const userRepoFromUrl = require('./services/userRepoFromUrl')
 const validateUrl = require('./services/validateUrl')
@@ -22,7 +22,7 @@ gitHubRouter.get('/', async (req, res) => {
         .then(validateUrl)
         .then(userRepoFromUrl)
         .then(getRepo(gh))
-        .then(getOpenPrs)
+        .then(getOpenPRs)
         .then(commitsFromPRs)
         .then((openPulls) =>
             openPulls.map((pull) => ({

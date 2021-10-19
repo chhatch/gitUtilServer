@@ -1,6 +1,6 @@
 const axios = require('axios')
 jest.mock('axios')
-const commitsFromPRs = require('../commitsFromPrs')
+const commitsFromPRs = require('../commitsFromPRs')
 const gitHubApiKey = process.env.GITHUB_API_KEY
 
 test('should retrieve commits for pullRequest objects from GitHib api', async () => {
