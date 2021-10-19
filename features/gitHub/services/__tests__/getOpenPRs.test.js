@@ -35,6 +35,5 @@ test('return 404 if repository cannot be found', async () => {
         Promise.reject({ response: { status: 404 } })
     )
     const result = await getOpenPRs(ghRepo).catch((e) => e)
-    console.log(result)
     expect(result.status).toEqual(404)
 })
