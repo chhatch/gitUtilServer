@@ -11,6 +11,8 @@ const getOpenPrs = async (ghRepo) => {
                 page,
                 per_page: 100,
             })
+            //we could also check whether data.length less than per page
+            //that would indicate that we have all the PRs, but an extra request is ok for now
             if (queryRes.data.length) {
                 openPulls.push(...queryRes.data)
                 page++

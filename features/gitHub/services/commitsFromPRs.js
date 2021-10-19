@@ -8,6 +8,9 @@ const commitsFromPRs = async (pulls) => {
     try {
         for (let i = 0, len = pulls.length; i < len; i++) {
             const pull = pulls[i]
+            //github-api library we're using doesn't seem to have a method to get commits for a pr
+            //luckily the data returned from GitHub includes the fully formed url for fetching
+            //the commits for each pr and we can just use axios
             const commits = (
                 await axios.get(pull.commits_url, {
                     headers: { Authorization: `token ${gitHubApiKey}` },
